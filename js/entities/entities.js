@@ -35,9 +35,31 @@ game.PlayerEntity = me.Entity.extend({
      */
     update : function (dt) {
 
-      this.body.force.x = 0;
-      // change to the standing animation
-      this.renderable.setCurrentAnimation("stand");
+      if (me.input.isKeyPressed('left')) {
+
+        // flip the sprite on horizontal axis
+        this.renderable.flipX(true);
+        // update the default force
+        this.body.force.x = -this.body.maxVel.x;
+        // change to the walking animation
+        if (!this.renderable.isCurrentAnimation("walk")) {
+            this.renderable.setCurrentAnimation("walk");
+        }
+    } else if (me.input.isKeyPressed('right')) {
+
+        // unflip the sprite
+        this.renderable.flipX(false);
+        // update the entity velocity
+        this.body.force.x = this.body.maxVel.x;
+        // change to the walking animation
+        if (!this.renderable.isCurrentAnimation("walk")) {
+            this.renderable.setCurrentAnimation("walk");
+        }
+    } else {
+        this.body.force.x = 0;
+        // change to the standing animation
+        this.renderable.setCurrentAnimation("stand");
+    }
 
         // apply physics to the body (this moves the entity)
         this.body.update(dt);
